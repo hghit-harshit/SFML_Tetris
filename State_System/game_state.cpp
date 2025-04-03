@@ -16,6 +16,9 @@ void State_Game::OnCreate()
     //m_music.play();
     m_music.setLoop(true);
     m_music.setVolume(25.0f);
+    m_buffer.loadFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\collid.mp3");
+    m_collid.setBuffer(m_buffer);
+    //m_collid.setPlayingOffset(sf::seconds(0.75));
     m_tickrate = 0.5;
     //for(int i = 0; i < 10; ++i)m_grid[i][i] = 1;
     EventManager* evmgr = m_stateManager->GetContext()->m_eventManager;
@@ -39,7 +42,7 @@ void State_Game::OnDestroy()
     evmgr->RemoveCallback(StateType::Game,"Key_Right");
 }
 
-void State_Game::Activate(){m_music.play();}
+// void State_Game::Activate(){m_music.play();}
 void State_Game::Deactivate(){m_music.stop();}
 
 void State_Game::Update(const sf::Time& l_time)
@@ -160,7 +163,11 @@ void State_Game::ResetTick(EventDetails* l_details){m_tickrate = 0.5;}
 void State_Game::Tick()
 {
     std::cout << "Moving\n";
-    if(!m_piece->CheckCollision())MoveDown();
+    if(!m_piece->CheckCollision())
+    {
+        MoveDown();
+        if(m_piece->CheckCollision())m_collid.play();
+    }
     else 
     {
         for(int i = 2; i < m_grid.size(); ++i)
@@ -168,12 +175,19 @@ void State_Game::Tick()
             if(RowComplete(i))
             {
                 RemoveRow(i);
+                // m_score++;
+                // if(m_score > 5)
+                // {
+                //     m_tickrate -= 0.1;
+                //     m_score = 0;
+                // }
                 i--;
             }
         }
         delete m_piece;
         SpawnPiece();
     }
+    
 
 }
 

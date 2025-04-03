@@ -24,6 +24,8 @@ class State_Game:public BaseState
         void MoveLeft(EventDetails* l_details);
         void MoveRight(EventDetails* l_details);
         void ChangeOrientation(EventDetails* l_details);
+        void IncreaseTick(EventDetails* l_details);
+        void ResetTick(EventDetails* l_details);
         void Tick();
         void MoveDown();
         bool GameOver();
@@ -41,6 +43,7 @@ class State_Game:public BaseState
         sf::Clock m_clock;
         sf::Time m_time;
         sf::Music m_music;
+        float m_tickrate;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////

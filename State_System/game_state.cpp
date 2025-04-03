@@ -16,6 +16,7 @@ void State_Game::OnCreate()
     //m_music.play();
     m_music.setLoop(true);
     m_music.setVolume(25.0f);
+    m_tickrate = 0.5;
     //for(int i = 0; i < 10; ++i)m_grid[i][i] = 1;
     EventManager* evmgr = m_stateManager->GetContext()->m_eventManager;
     evmgr->AddCallback(StateType::Game,"Key_Escape",&State_Game::MainMenu,this);
@@ -23,6 +24,8 @@ void State_Game::OnCreate()
     evmgr->AddCallback(StateType::Game,"Key_Left",&State_Game::MoveLeft,this);
     evmgr->AddCallback(StateType::Game,"Key_Right",&State_Game::MoveRight,this);
     evmgr->AddCallback(StateType::Game,"Key_Change",&State_Game::ChangeOrientation,this);
+    evmgr->AddCallback(StateType::Game,"Key_Increase",&State_Game::IncreaseTick,this);
+    evmgr->AddCallback(StateType::Game,"Key_Reset",&State_Game::ResetTick,this);
     SpawnPiece();
 
 }
@@ -59,7 +62,7 @@ void State_Game::Update(const sf::Time& l_time)
 
     if(!GameOver())
     {
-        if(m_time.asSeconds() >= 0.5)
+        if(m_time.asSeconds() >= m_tickrate)
         {
             Tick();
             m_time = m_clock.restart();
@@ -150,6 +153,10 @@ void State_Game::MoveRight(EventDetails* l_details){m_piece->MoveRight();}
 void State_Game::MoveLeft(EventDetails* l_details){m_piece->MoveLeft();}
 void State_Game::ChangeOrientation(EventDetails* l_details){m_piece->ChangeOrientation();}
 
+void State_Game::IncreaseTick(EventDetails* l_details){m_tickrate = 0.1;}
+void State_Game::ResetTick(EventDetails* l_details){m_tickrate = 0.5;}
+
+
 void State_Game::Tick()
 {
     std::cout << "Moving\n";
@@ -160,8 +167,6 @@ void State_Game::Tick()
         {
             if(RowComplete(i))
             {
-                //std::cout << "loop\n";
-                //std::cout << '\a';
                 RemoveRow(i);
                 i--;
             }

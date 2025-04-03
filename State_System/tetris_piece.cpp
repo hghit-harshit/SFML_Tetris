@@ -97,13 +97,24 @@ void Tetris_Piece::ChangeOrientation()
     int row = m_tile.size();
     int col = m_tile[0].size();
     Grid l_rotated(m_tile[0].size(),std::vector<int>(m_tile.size()));
+    if(m_position.second + m_tile.size() > m_grid.size() || 
+    m_position.first + m_tile.size() > m_grid[0].size())return;
+    bool can_rotate = true;
+    // now we check if the changge in ratation is overlapping with some piece
     for(int i = 0; i < l_rotated.size(); ++i)
     {
         for(int j = 0; j < l_rotated[0].size(); ++j)
-        {
+        {   
+            // if(m_grid[m_position.second + i][m_position.first + j] == 1)
+            // {
+            //     can_rotate = false;
+            //     break;
+            // }
             l_rotated[i][j] = m_tile[row - 1 -j][i];
         }
+        if(!can_rotate)break;
     }
     Clear();
+    
     m_tile = l_rotated;
 }

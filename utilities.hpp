@@ -1,4 +1,5 @@
 #pragma once
+#pragma comment(lib,"Shlwapi.lib")
 #define RUNNING_WINDOWS
 #include <iostream>
 #include <string>
@@ -11,17 +12,17 @@ namespace Utils
     #include <windows.h>
     #include <Shlwapi.h>
 
-    inline std::string GetWorkingDirectory()
+    inline std::wstring GetWorkingDirectory()
     {
         HMODULE hModule = GetModuleHandle(nullptr);
         if(hModule)
         {
-            char path[256] = {};
-            GetModuleFileName(hModule,(wchar_t*)(path),sizeof(path));
-            PathRemoveFileSpec((wchar_t*)(path));  
-            return std::string(path) + "\\";
+            wchar_t path[256] = {};
+            GetModuleFileName(hModule,path,sizeof(path));
+            PathRemoveFileSpec(path);  
+            return std::wstring(path) + L"\\";
         }
-        return "";
+        return L"";
     }
 
     #elif defined RUNNING_LINUX

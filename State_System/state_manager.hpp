@@ -3,6 +3,7 @@
 #include "state_type.hpp"
 #include "../Window_System/window.hpp"
 #include "../Event_System/event_manager.hpp"
+#include "../utilities.hpp"
 #include <functional>
 #include <vector>
 

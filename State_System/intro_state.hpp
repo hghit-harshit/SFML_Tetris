@@ -62,7 +62,8 @@ void State_Intro::OnCreate()
     m_introTexture.getSize().y/2.0f);
 
     m_introSprite.setPosition(windowSize.x/2.0f,0);
-
+    std::wstring cwd = Utils::GetWorkingDirectory();
+    std::wcout << "Working directory:" << cwd;
     if (!m_font.loadFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\arial.ttf")) 
     {
         std::cout << "Could not load font file!\n";

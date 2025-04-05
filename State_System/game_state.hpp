@@ -4,6 +4,7 @@
 #include <SFML/Audio.hpp>
 //#include "world.hpp"
 #include "tetris_piece.hpp"
+#include "score_board.hpp"
 #include <vector>
 
 class State_Game:public BaseState
@@ -14,7 +15,7 @@ class State_Game:public BaseState
         void OnDestroy() override;
         
         void Activate() override{};
-        void Deactivate() override;
+        void Deactivate() override{};
 
         void Update(const sf::Time& l_time) override;
         void Draw() override;
@@ -40,14 +41,17 @@ class State_Game:public BaseState
         Grid m_grid;
         int m_blockSize;
         Tetris_Piece* m_piece;
-        // int m_score;
+        //int m_score;
         // int m_level;
         sf::Clock m_clock;
         sf::Time m_time;
-        sf::Music m_music;
         sf::SoundBuffer m_buffer;
         sf::Sound m_collid;
         float m_tickrate;
+        Score_Board* m_scoreBoard;
+        sf::Texture m_tileTexture;
+        sf::Texture m_backgroundTexture;
+        
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////

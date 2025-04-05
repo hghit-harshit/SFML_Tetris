@@ -5,19 +5,16 @@ State_Game::State_Game(StateManager* l_stateManager):BaseState(l_stateManager){}
 
 void State_Game::OnCreate()
 {
-    // m_texture.loadFromFile("resources/logo.png");
-    // m_sprite.setTexture(m_texture);
-    // m_sprite.setPosition(0,0);s
-    // m_increment= sf::Vector2f(200.0f,200.0f);
     sf::Vector2u l_windowSize = m_stateManager->GetContext()->m_wind->GetWindowSize();
-    m_blockSize = l_windowSize.x/10;
+    m_blockSize = l_windowSize.x/20;
     m_grid = std::vector<std::vector<int>>(20,std::vector<int>(10,0));
-    m_music.openFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\tetris_theme.mp3");
-    //m_music.play();
-    m_music.setLoop(true);
-    m_music.setVolume(25.0f);
+
+    m_scoreBoard = new Score_Board(400,800,sf::Vector2f(400,0));
+    
     m_buffer.loadFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\collid.mp3");
     m_collid.setBuffer(m_buffer);
+    m_backgroundTexture.loadFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\background_texture.png");
+    m_tileTexture.loadFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\pink_texture.png");
     //m_collid.setPlayingOffset(sf::seconds(0.75));
     m_tickrate = 0.5;
     //for(int i = 0; i < 10; ++i)m_grid[i][i] = 1;
@@ -40,29 +37,18 @@ void State_Game::OnDestroy()
     evmgr->RemoveCallback(StateType::Game,"Key_Pause");
     evmgr->RemoveCallback(StateType::Game,"Key_Left");
     evmgr->RemoveCallback(StateType::Game,"Key_Right");
+    evmgr->RemoveCallback(StateType::Game,"Key_Change");
+    evmgr->RemoveCallback(StateType::Game,"Key_Increase");
+    evmgr->RemoveCallback(StateType::Game,"Key_Reset");
 }
 
 // void State_Game::Activate(){m_music.play();}
-void State_Game::Deactivate(){m_music.stop();}
+//void State_Game::Deactivate(){m_music.stop();}
 
 void State_Game::Update(const sf::Time& l_time)
 {
     sf::Vector2u l_windowSize = m_stateManager->GetContext()->m_wind->GetWindowSize();
-    // sf::Vector2u l_textureSize = m_texture.getSize();
-
-    // if((m_sprite.getPosition().x > l_windowSize.x - l_textureSize.x && m_increment.x > 0) ||
-    // (m_sprite.getPosition().x < 0 && m_increment.x < 0))
-    // {
-    //     m_increment.x = -m_increment.x;
-    // }
-    // if((m_sprite.getPosition().y > l_windowSize.y - l_textureSize.y && m_increment.y > 0) ||
-    // (m_sprite.getPosition().y < 0 && m_increment.y < 0))
-    // {
-    //     m_increment.y = -m_increment.y;
-    // }
-    // m_sprite.setPosition(m_sprite.getPosition().x + (m_increment.x * l_time.asSeconds()), 
-    // m_sprite.getPosition().y + (m_increment.y * l_time.asSeconds()));
-
+    
     if(!GameOver())
     {
         if(m_time.asSeconds() >= m_tickrate)
@@ -91,26 +77,18 @@ void State_Game::Draw()
     {
         for(int j = 0; j < m_grid[0].size(); ++j)
         {
+            sf::RectangleShape temp;
+            sf::Vector2f size(m_blockSize,m_blockSize);
+            temp.setSize(size);
+            temp.setPosition(j*m_blockSize,i*m_blockSize);
             if(m_grid[i][j] == 0)
-            {
-                sf::RectangleShape temp;
-                sf::Vector2f size(m_blockSize-1,m_blockSize-1);
-                temp.setSize(size);
-                temp.setFillColor(sf::Color::Red);
-                temp.setPosition(j*m_blockSize,i*m_blockSize);
-                l_renderwind->draw(temp);
-            }
+            {temp.setTexture(&m_backgroundTexture);}
             else 
-            {
-                sf::RectangleShape temp;
-                sf::Vector2f size(m_blockSize,m_blockSize);
-                temp.setSize(size);
-                temp.setFillColor(sf::Color::Yellow);
-                temp.setPosition(j*m_blockSize,i*m_blockSize);
-                l_renderwind->draw(temp);
-            }
+            {temp.setTexture(&m_tileTexture); }
+            l_renderwind->draw(temp);
         }
     }
+    m_scoreBoard->Render(l_renderwind);
 }
 
 void State_Game::MainMenu(EventDetails* l_details)
@@ -175,12 +153,7 @@ void State_Game::Tick()
             if(RowComplete(i))
             {
                 RemoveRow(i);
-                // m_score++;
-                // if(m_score > 5)
-                // {
-                //     m_tickrate -= 0.1;
-                //     m_score = 0;
-                // }
+                m_scoreBoard->IncreaseScore();
                 i--;
             }
         }

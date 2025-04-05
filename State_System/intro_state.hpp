@@ -3,6 +3,7 @@
 
 #include "state_manager.hpp"
 #include <iostream>
+#include <SFML/Audio.hpp>
 
 
 class State_Intro : public BaseState
@@ -12,7 +13,7 @@ class State_Intro : public BaseState
         void OnCreate() override;
         void OnDestroy() override;
         
-        void Activate() override{};
+        void Activate() override;
         void Deactivate() override{};
 
         void Update(const sf::Time& l_time) override;
@@ -24,6 +25,7 @@ class State_Intro : public BaseState
         sf::Sprite m_introSprite;
         sf::Text m_text;
         sf::Font m_font;
+        sf::Music m_music;
         float m_timePassed;
 
         
@@ -75,10 +77,17 @@ void State_Intro::OnCreate()
     m_text.setOrigin(textRect.left + textRect.width / 2.0f, 
     textRect.top + textRect.height/2.0f);
     
+    m_music.openFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\tetris_theme.mp3");
+    //m_music.play();
+    m_music.setLoop(true);
+    m_music.setVolume(25.0f);
+
     std::cout << "This gets to the end\n";
     m_stateManager->GetContext()->m_eventManager->
     AddCallback(StateType::Intro,"Intro_Continue",&State_Intro::Continue,this);
 }
+
+void State_Intro::Activate(){m_music.play();}
 
 void State_Intro::OnDestroy()
 {

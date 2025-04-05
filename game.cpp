@@ -3,7 +3,7 @@
 #include <exception>
 
 Game::Game():
-m_window("My Game",sf::Vector2u(450,900))
+m_window("My Game",sf::Vector2u(800,800))
 {
     // if(!m_logoTexture.loadFromFile("resources/logo.png")) 
     // {

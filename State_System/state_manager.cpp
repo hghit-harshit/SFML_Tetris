@@ -103,7 +103,7 @@ void StateManager::ProcessRequest()
 void StateManager::SwitchTo(const StateType& l_type)
 {
     //std::cout << "It gets inside switch to!!!!\n";
-    if(l_type == StateType::MainMenu)std::cout << "its main menu my mann\n";
+    //if(l_type == StateType::MainMenu)std::cout << "its main menu my mann\n";
     m_shared->m_eventManager->SetCurrentState(l_type);
     for(auto itr = m_states.begin(); itr != m_states.end(); ++itr)
     {

@@ -118,3 +118,16 @@ void Tetris_Piece::ChangeOrientation()
     
     m_tile = l_rotated;
 }
+
+void Tetris_Piece::Solidify()
+{
+    for(int i = m_position.second; i < m_position.second + m_tile.size() ;++i)
+    {
+        for(int j = m_position.first; j < m_position.first + m_tile[0].size(); ++j)
+        {
+            if(m_grid[i][j] == 1)
+                m_grid[i][j] = 2*m_tile[i-m_position.second][j-m_position.first];
+            //std::cout << "Printing\n";
+        }
+    }
+}

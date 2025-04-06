@@ -14,8 +14,8 @@ class State_Game:public BaseState
         void OnCreate() override;
         void OnDestroy() override;
         
-        void Activate() override;
-        void Deactivate() override;
+        void Activate() override{};
+        void Deactivate() override{};
 
         void Update(const sf::Time& l_time) override;
         void Draw() override;
@@ -35,15 +35,12 @@ class State_Game:public BaseState
         bool RowComplete(int l_row);
         void RemoveRow(int l_row);
     private:
-        // sf::Texture m_texture;
-        // sf::Sprite m_sprite;
-        // sf::Vector2f m_increment;
+
         int height; // the height of the whoel tetris blocks
         Grid m_grid;
         int m_blockSize;
         Tetris_Piece* m_piece;
-        //int m_score;
-        // int m_level;
+       
         sf::Clock m_clock;
         sf::Time m_time;
         sf::SoundBuffer m_buffer;
@@ -52,7 +49,7 @@ class State_Game:public BaseState
         Score_Board* m_scoreBoard;
         sf::Texture m_tileTexture;
         sf::Texture m_backgroundTexture;
-        
+        bool m_gameOver;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////

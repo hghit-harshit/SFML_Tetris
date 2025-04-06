@@ -3,6 +3,7 @@
 #include "main_menu_state.hpp"
 #include "game_state.hpp"
 #include "paused_state.hpp"
+#include "gameover_state.hpp"
 #include <iostream>
 
 StateManager::StateManager(SharedContext* l_shared):m_shared(l_shared)
@@ -13,6 +14,7 @@ StateManager::StateManager(SharedContext* l_shared):m_shared(l_shared)
     CreateState(StateType::MainMenu);
     RegisterState<State_Game>(StateType::Game);
     RegisterState<State_Paused>(StateType::Paused);
+    RegisterState<State_GameOver>(StateType::GameOver);
     //CreateState(StateType::Game);
 }
 

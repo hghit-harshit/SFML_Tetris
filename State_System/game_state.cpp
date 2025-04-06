@@ -8,7 +8,7 @@ void State_Game::OnCreate()
     sf::Vector2u l_windowSize = m_stateManager->GetContext()->m_wind->GetWindowSize();
     m_blockSize = l_windowSize.x/20;
     m_grid = std::vector<std::vector<int>>(20,std::vector<int>(10,0));
-
+    m_gameOver = false;
     m_scoreBoard = new Score_Board(400,800,sf::Vector2f(400,0));
     
     m_buffer.loadFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\collid.mp3");
@@ -44,16 +44,16 @@ void State_Game::OnDestroy()
     evmgr->RemoveCallback(StateType::Game,"Key_Reset");
 }
 
-void State_Game::Activate()
-{m_stateManager->GetContext()->m_music.play();}
-void State_Game::Deactivate()
-{m_stateManager->GetContext()->m_music.pause();}
+// void State_Game::Activate()
+// {m_stateManager->GetContext()->m_music.play();}
+// void State_Game::Deactivate()
+// {m_stateManager->GetContext()->m_music.pause();}
 
 void State_Game::Update(const sf::Time& l_time)
 {
     sf::Vector2u l_windowSize = m_stateManager->GetContext()->m_wind->GetWindowSize();
     
-    if(!GameOver())
+    if(!m_gameOver)
     {
         if(m_time.asSeconds() >= m_tickrate)
         {
@@ -62,19 +62,12 @@ void State_Game::Update(const sf::Time& l_time)
         }
         else{ m_time = m_clock.getElapsedTime();}
     }
-
+    else{m_stateManager->SwitchTo(StateType::GameOver);}
 }
 
 void State_Game::Draw()
 {
-    // for(auto row : m_grid)
-    // {
-    //     for(auto col : row)
-    //     {
-    //         std::cout << col << ' ';
-    //     }
-    //     puts("");
-    // }
+
     m_piece->RenderPiece();
     sf::RenderWindow* l_renderwind = m_stateManager->GetContext()->m_wind->GetRenderWindow();
     for(int i = 0; i < m_grid.size(); ++i)
@@ -150,6 +143,8 @@ void State_Game::Tick()
     }
     else 
     {
+        m_piece->Solidify();
+        m_gameOver = GameOver();
         for(int i = 2; i < m_grid.size(); ++i)
         {
             if(RowComplete(i))
@@ -187,6 +182,11 @@ void State_Game::RemoveRow(int l_row)
 }
 bool State_Game::GameOver()
 {
-    
+    // i know this seems expensive but come on its just 200 cells
+    // that like basically O(1)
+    for(int j = 0;j< m_grid[0].size(); ++j)
+    {
+        if(m_grid[0][j] == 2)return true;
+    }
     return false;
 }

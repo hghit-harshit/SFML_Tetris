@@ -88,6 +88,9 @@ void State_Intro::OnCreate()
     l_shared->m_music.play();
 }
 
+// void State_Intro::Deactivate()
+// {m_stateManager->GetContext()->m_music.pause();}
+
 void State_Intro::OnDestroy()
 {
     EventManager* evmgr = m_stateManager->GetContext()->m_eventManager;

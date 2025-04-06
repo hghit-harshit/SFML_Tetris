@@ -28,6 +28,7 @@ class State_Intro;
 class State_MainMenu;
 class State_Game;
 class State_Paused;
+class State_GameOver;
 class StateManager
 {
     public:

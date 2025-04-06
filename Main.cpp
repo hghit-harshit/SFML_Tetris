@@ -7,7 +7,6 @@ int main(int arg, char** agrv[])
 	Game game;
 	while(!game.GetWindow()->IsDone())
 	{
-		//game.HandleInput();
 		game.Update();
 		game.Render();
 		game.LastUpdate();

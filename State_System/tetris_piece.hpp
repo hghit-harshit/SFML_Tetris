@@ -13,6 +13,7 @@ class Tetris_Piece
         void ChangeOrientation();
         bool CheckCollision();
         void RenderPiece();
+        void Solidify(); // I am doing this to check gameove condition
         void Clear();
     protected:
         Grid& m_grid;

@@ -1,13 +1,13 @@
-#include "paused_state.hpp"
+#include "gameover_state.hpp"
 
-State_Paused::State_Paused(StateManager* l_stateManager) : BaseState(l_stateManager) {}
+State_GameOver::State_GameOver(StateManager* l_stateManager):BaseState(l_stateManager){}
 
-void State_Paused::OnCreate()
+void State_GameOver::OnCreate()
 {
     SetTransparent(true);
     m_font.loadFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\Minecraft.ttf");
     m_text.setFont(m_font);
-    m_text.setString(sf::String("Paused"));
+    m_text.setString(sf::String("GAME OVER"));
     m_text.setCharacterSize(40);
     m_text.setStyle(sf::Text::Bold);
 
@@ -26,11 +26,10 @@ void State_Paused::OnCreate()
     m_buttonPadding = 4;
 
     std::string str[3];
-    str[0] = "RESUME";
-    str[1] = "RESTART";
-    str[2] = "MAIN MENU";
+    str[0] = "RESTART";
+    str[1] = "MAIN MENU";
 
-    for(int i = 0; i < 3; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         sf::Vector2f buttonPos(m_buttonPos.x,m_buttonPos.y + (i*(m_buttonSize.y + m_buttonPadding)));
         m_rects[i].setSize(m_buttonSize);
@@ -49,56 +48,42 @@ void State_Paused::OnCreate()
         m_lables[i].setPosition(buttonPos);
     }
 
-    EventManager* evmgr = m_stateManager->GetContext()->m_eventManager;
-    
-    evmgr->AddCallback(StateType::Paused,"Key_Pause",&State_Paused::Unpuase,this);
-    evmgr->AddCallback(StateType::Paused,"Mouse_Left",&State_Paused::MouseClick,this);
+    m_stateManager->GetContext()->m_eventManager->
+    AddCallback(StateType::GameOver,"Mouse_Left",&State_GameOver::MouseClick,this);
 }
 
-void State_Paused::Unpuase(EventDetails* l_details)
+void State_GameOver::OnDestroy()
 {
-    m_stateManager->SwitchTo(StateType::Game);
+    m_stateManager->GetContext()->m_eventManager->RemoveCallback(StateType::GameOver,"Mouse_Left");
 }
 
-void State_Paused::MouseClick(EventDetails* l_details)
+void State_GameOver::MouseClick(EventDetails* l_details)
 {
     sf::Vector2i mousePos = l_details->m_mouse;
 
     float halfx = m_buttonSize.x/2.0f;
     float halfy = m_buttonSize.y/2.0f;
 
-    for(int i = 0; i < 3; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         if(mousePos.x >= m_rects[i].getPosition().x - halfx &&
         mousePos.x <= m_rects[i].getPosition().x + halfx &&
         mousePos.y >= m_rects[i].getPosition().y - halfy &&
         mousePos.y <= m_rects[i].getPosition().y + halfy)
         {
-            if(i == 0){m_stateManager->SwitchTo(StateType::Game);}
-            else if(i ==1)
-            {
-                //m_stateManager->Remove(StateType::Game);
-                m_stateManager->RestartState(StateType::Game);
-            }
-            else if(i == 2){m_stateManager->SwitchTo(StateType::MainMenu);}
+            if(i == 0){m_stateManager->RestartState(StateType::Game);}
+            else if(i ==1) {m_stateManager->SwitchTo(StateType::MainMenu);}
+            
         }
     }
 }
 
-void State_Paused::OnDestroy()
-{
-    EventManager* evmgr = m_stateManager->GetContext()->m_eventManager;
-    evmgr->RemoveCallback(StateType::Paused,"Key_Pause");
-    evmgr->RemoveCallback(StateType::Paused,"Mouse_Left");
-    
-}
-
-void State_Paused::Draw()
+void State_GameOver::Draw()
 {
     sf::RenderWindow* wind = m_stateManager->GetContext()->m_wind->GetRenderWindow();
     wind->draw(m_rect);
     wind->draw(m_text);
-    for(int i = 0; i < 3; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         wind->draw(m_rects[i]);
         wind->draw(m_lables[i]);

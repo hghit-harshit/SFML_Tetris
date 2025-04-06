@@ -81,6 +81,7 @@ void State_MainMenu::OnDestroy()
 }
 void State_MainMenu::Activate()
 {
+    //m_stateManager->GetContext()->m_music.play();
     if(m_stateManager->HasState(StateType::Game) && m_lables[0].getString() == "PLAY")
     {
         m_lables[0].setString(sf::String("RESUME"));

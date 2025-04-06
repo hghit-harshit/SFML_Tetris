@@ -14,8 +14,8 @@ class State_Game:public BaseState
         void OnCreate() override;
         void OnDestroy() override;
         
-        void Activate() override{};
-        void Deactivate() override{};
+        void Activate() override;
+        void Deactivate() override;
 
         void Update(const sf::Time& l_time) override;
         void Draw() override;

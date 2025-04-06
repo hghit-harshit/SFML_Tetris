@@ -6,12 +6,15 @@
 #include "../utilities.hpp"
 #include <functional>
 #include <vector>
+#include <SFML/Audio.hpp>
 
 struct SharedContext
 {
     SharedContext():m_wind(nullptr),m_eventManager(nullptr){}
     Window* m_wind;
-    EventManager* m_eventManager;
+    EventManager* m_eventManager;   
+    sf::Music m_music;
+
 };
 
 //container for states

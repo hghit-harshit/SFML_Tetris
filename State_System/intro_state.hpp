@@ -3,7 +3,7 @@
 
 #include "state_manager.hpp"
 #include <iostream>
-#include <SFML/Audio.hpp>
+
 
 
 class State_Intro : public BaseState
@@ -13,7 +13,7 @@ class State_Intro : public BaseState
         void OnCreate() override;
         void OnDestroy() override;
         
-        void Activate() override;
+        void Activate() override{};
         void Deactivate() override{};
 
         void Update(const sf::Time& l_time) override;
@@ -25,8 +25,9 @@ class State_Intro : public BaseState
         sf::Sprite m_introSprite;
         sf::Text m_text;
         sf::Font m_font;
-        sf::Music m_music;
         float m_timePassed;
+        float m_time;
+        bool m_blink;
 
         
 };
@@ -41,22 +42,19 @@ State_Intro::State_Intro(StateManager* l_stateManager): BaseState(l_stateManager
 
 void State_Intro::OnCreate()
 {
-    std::cout << "It gets inside on create\n";
+    
     m_timePassed = 0.0f;
+    m_blink = true;
+    m_time = 0.0f;
     auto context = m_stateManager->GetContext();
-    if (context == nullptr) std::cout << " the context is null\n";
-    //if (context->m_wind == nullptr)std::cout << "The window is null\n";
     sf::Vector2u windowSize = m_stateManager->
     GetContext()->m_wind->GetWindowSize();
-    // why the fuck is it retuning a null pointer though investigate the hell out of it!!!
-    //sf::Vector2u windowSize{ 800,600 };
-    // GetRenderWindow is returning null pointer
 
     if (!m_introTexture.loadFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\tetris_logo.png"))
     {
         std::cout << "Could not load texture file!\n";
     }
-    else std::cout << "Loads texture\n";
+    //else std::cout << "Loads texture\n";
     m_introSprite.setTexture(m_introTexture);
     m_introSprite.setScale(0.25,0.25);
 
@@ -66,28 +64,29 @@ void State_Intro::OnCreate()
     m_introSprite.setPosition(windowSize.x/2.0f,0);
     std::wstring cwd = Utils::GetWorkingDirectory();
     std::wcout << "Working directory:" << cwd;
-    if (!m_font.loadFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\arial.ttf")) 
+    if (!m_font.loadFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\Minecraft.ttf")) 
     {
         std::cout << "Could not load font file!\n";
     }
     m_text.setFont(m_font);
-    m_text.setString("Hello World");
-    m_text.setCharacterSize(15);
+    m_text.setString("Press Space to Start");
+    m_text.setCharacterSize(40);
     sf::FloatRect textRect = m_text.getLocalBounds();
     m_text.setOrigin(textRect.left + textRect.width / 2.0f, 
     textRect.top + textRect.height/2.0f);
-    
-    m_music.openFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\tetris_theme.mp3");
-    //m_music.play();
-    m_music.setLoop(true);
-    m_music.setVolume(25.0f);
+    m_text.setPosition(windowSize.x/2.0f,windowSize.y/2.0f + 20);
 
+    SharedContext* l_shared = m_stateManager->GetContext();
+    l_shared->m_music.openFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\tetris_theme.mp3");
+    l_shared->m_music.setLoop(true);
+    l_shared->m_music.setVolume(25.0f);
+    
     std::cout << "This gets to the end\n";
     m_stateManager->GetContext()->m_eventManager->
     AddCallback(StateType::Intro,"Intro_Continue",&State_Intro::Continue,this);
-}
 
-void State_Intro::Activate(){m_music.play();}
+    l_shared->m_music.play();
+}
 
 void State_Intro::OnDestroy()
 {
@@ -105,13 +104,22 @@ void State_Intro::Update(const sf::Time& l_time)
         m_introSprite.setPosition(m_introSprite.getPosition().x,
         m_introSprite.getPosition().y + (48*l_time.asSeconds()));
     }
+    else
+    {
+        if(m_time >= 0.5)
+        {
+            m_blink = !m_blink;
+            m_time = 0.0f;
+        }
+        else{ m_time += l_time.asSeconds();}
+    }
 }
 
 void State_Intro::Draw()
 {
     sf::RenderWindow* window = m_stateManager->GetContext()->m_wind->GetRenderWindow();
     window->draw(m_introSprite);
-    if(m_timePassed >= 5.0f)
+    if(m_timePassed >= 5.0f && m_blink)
     {
         window->draw(m_text);
     }
@@ -119,9 +127,6 @@ void State_Intro::Draw()
 
 void State_Intro::Continue(EventDetails* l_details)
 {
-    if(m_timePassed >= 5.0f)
-    {
-        m_stateManager->SwitchTo(StateType::MainMenu);
-        m_stateManager->Remove(StateType::Intro);
-    }
+    m_stateManager->SwitchTo(StateType::MainMenu);
+    m_stateManager->Remove(StateType::Intro);
 }

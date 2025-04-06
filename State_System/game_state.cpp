@@ -44,8 +44,10 @@ void State_Game::OnDestroy()
     evmgr->RemoveCallback(StateType::Game,"Key_Reset");
 }
 
-// void State_Game::Activate(){m_music.play();}
-//void State_Game::Deactivate(){m_music.stop();}
+void State_Game::Activate()
+{m_stateManager->GetContext()->m_music.play();}
+void State_Game::Deactivate()
+{m_stateManager->GetContext()->m_music.pause();}
 
 void State_Game::Update(const sf::Time& l_time)
 {

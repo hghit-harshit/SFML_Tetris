@@ -21,7 +21,7 @@ class State_MainMenu : public BaseState
         sf::Vector2f m_buttonSize;
         sf::Vector2f m_buttonPos;
         unsigned int m_buttonPadding;
-
+        //bool m_musicPlaying;
         sf::RectangleShape m_rects[3];
         sf::Text m_lables[3];
 
@@ -33,6 +33,7 @@ State_MainMenu::State_MainMenu(StateManager* l_stateManager):BaseState(l_stateMa
 
 void State_MainMenu::OnCreate()
 {
+
     m_font.loadFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\Minecraft.ttf");
     m_text.setFont(m_font);
     m_text.setString(sf::String("MAIN MENU"));
@@ -49,7 +50,7 @@ void State_MainMenu::OnCreate()
 
     std::string str[3];
     str[0] = "PLAY";
-    str[1] = "REPLAY";
+    str[1] = "MUSIC:ON";
     str[2] = "EXIT";
 
     for(int i = 0; i < 3; ++i)
@@ -105,8 +106,18 @@ void State_MainMenu::MouseClick(EventDetails* l_details)
             if(i == 0){m_stateManager->SwitchTo(StateType::Game);}
             else if(i ==1)
             {
-                //m_stateManager->Remove(StateType::Game);
-                m_stateManager->SwitchTo(StateType::Game);
+                if(m_lables[1].getString() == "MUSIC:ON")
+                {
+                    m_stateManager->GetContext()->m_music.pause();
+                    m_lables[1].setString("MUSIC:OFF");
+                }
+                else
+                {
+                    m_stateManager->GetContext()->m_music.play();
+                    m_lables[1].setString("MUSIC:ON");
+                }
+                sf::FloatRect textRect = m_lables[1].getLocalBounds();
+                m_lables[1].setOrigin(textRect.left + textRect.width/2.0f, textRect.top + textRect.height/2.0f);
             }
             else if(i == 2){m_stateManager->GetContext()->m_wind->Close();}
         }
@@ -126,5 +137,5 @@ void State_MainMenu::Draw()
 
 void State_MainMenu::Update(const sf::Time& l_time)
 {
-   
+    
 }

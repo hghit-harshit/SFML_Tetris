@@ -32,39 +32,9 @@ void Game::Update()
    //MoveLogo();
 } 
 
-
-// void Game::MoveLogo(EventDetails* l_details)
-// {
-//     sf::Vector2i mousepos = m_window.GetEventManager()->GetMousePosition(m_window.GetRenderWindow());
-//     //m_logo.setPosition(mousepos.x,mousepos.y);
-// }
-
-
-//void Game::MoveLogo()
-//{
-//    sf::Vector2u l_windSize = m_window.GetWindowSize();
-//    sf::Vector2u l_textSize = m_logoTexture.getSize();
-//
-//    if((m_logo.getPosition().x > l_windSize.x - m_size.x && m_increment.x > 0)
-//    ||(m_logo.getPosition().x < 0 && m_increment.x < 0))
-//    {
-//        m_increment.x  = -m_increment.x;
-//    }
-//    if((m_logo.getPosition().y > l_windSize.y - m_size.y && m_increment.y > 0)
-//    ||(m_logo.getPosition().y < 0 && m_increment.y < 0))
-//    {
-//        m_increment.y  = -m_increment.y;
-//    }
-//
-//    float secondsElapsed = m_elapsed.asSeconds();
-//    m_logo.move(m_increment.x*secondsElapsed,m_increment.y*secondsElapsed);
-//
-//}
-
 void Game::Render()
 {
     m_window.BeginDraw();
-    //m_window.Draw(m_logo);
     m_stateManager->Draw();
     m_window.EndDraw();
 }

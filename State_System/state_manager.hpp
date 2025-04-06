@@ -24,7 +24,7 @@ using StateFactory = std::unordered_map<StateType,std::function<BaseState*(void)
 class State_Intro;
 class State_MainMenu;
 class State_Game;
-
+class State_Paused;
 class StateManager
 {
     public:
@@ -40,6 +40,7 @@ class StateManager
         bool HasState(const StateType& l_type);
 
         void SwitchTo(const StateType& l_type);
+        void RestartState(const StateType& l_type);
         void Remove(const StateType& l_type);
 
     private:

@@ -27,6 +27,7 @@ class State_Game:public BaseState
         void ChangeOrientation(EventDetails* l_details);
         void IncreaseTick(EventDetails* l_details);
         void ResetTick(EventDetails* l_details);
+
         void Tick();
         void MoveDown();
         bool GameOver();

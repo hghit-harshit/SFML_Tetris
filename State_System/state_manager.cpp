@@ -2,6 +2,7 @@
 #include "intro_state.hpp"
 #include "main_menu_state.hpp"
 #include "game_state.hpp"
+#include "paused_state.hpp"
 #include <iostream>
 
 StateManager::StateManager(SharedContext* l_shared):m_shared(l_shared)
@@ -11,6 +12,7 @@ StateManager::StateManager(SharedContext* l_shared):m_shared(l_shared)
     RegisterState<State_MainMenu>(StateType::MainMenu);
     CreateState(StateType::MainMenu);
     RegisterState<State_Game>(StateType::Game);
+    RegisterState<State_Paused>(StateType::Paused);
     //CreateState(StateType::Game);
 }
 
@@ -87,6 +89,7 @@ bool StateManager::HasState(const StateType& l_type)
 
 void StateManager::Remove(const StateType& l_type)
 {
+    
     m_toRemove.push_back(l_type);
 }
 // now the removal is processed by the following function
@@ -95,6 +98,7 @@ void StateManager::ProcessRequest()
 {
     while(m_toRemove.begin() != m_toRemove.end()) // maybe we can do !m_toRemove.empty()
     {
+        
         RemoveState(*m_toRemove.begin());
         m_toRemove.erase(m_toRemove.begin());
     }
@@ -125,6 +129,12 @@ void StateManager::SwitchTo(const StateType& l_type)
     m_states.back().second->Activate(); // maybe this is the one causing trouble
 }
 
+void StateManager::RestartState(const StateType& l_type)
+{
+    RemoveState(l_type);
+    SwitchTo(l_type);
+}
+
 void StateManager::CreateState(const StateType& l_type)
 {
     auto newState = m_stateFactory.find(l_type);
@@ -138,10 +148,11 @@ void StateManager::CreateState(const StateType& l_type)
 
 void StateManager::RemoveState(const StateType& l_type)
 {
-    for(auto itr = m_states.end(); itr != m_states.end(); ++itr)
+    for(auto itr = m_states.begin(); itr != m_states.end(); ++itr)
     {
         if(itr->first == l_type)
         {
+            
             itr->second->OnDestroy();
             delete itr->second;
             m_states.erase(itr);

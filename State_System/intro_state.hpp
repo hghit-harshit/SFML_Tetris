@@ -105,7 +105,6 @@ void State_Intro::Update(const sf::Time& l_time)
         m_introSprite.setPosition(m_introSprite.getPosition().x,
         m_introSprite.getPosition().y + (48*l_time.asSeconds()));
     }
-    
 }
 
 void State_Intro::Draw()

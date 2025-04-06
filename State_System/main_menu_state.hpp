@@ -92,8 +92,8 @@ void State_MainMenu::MouseClick(EventDetails* l_details)
 {
     sf::Vector2i mousePos = l_details->m_mouse;
 
-    float halfx = m_buttonSize.x;
-    float halfy = m_buttonSize.y;
+    float halfx = m_buttonSize.x/2.0f;
+    float halfy = m_buttonSize.y/2.0f;
 
     for(int i = 0; i < 3; ++i)
     {

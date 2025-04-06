@@ -13,19 +13,21 @@ void State_Game::OnCreate()
     
     m_buffer.loadFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\collid.mp3");
     m_collid.setBuffer(m_buffer);
-    m_backgroundTexture.loadFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\background_texture.png");
+    m_backgroundTexture.loadFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\blue_texture.png");
     m_tileTexture.loadFromFile("C:\\Users\\hghit\\source\\repos\\SFML_Tetris\\SFML_Tetris\\resources\\pink_texture.png");
     //m_collid.setPlayingOffset(sf::seconds(0.75));
     m_tickrate = 0.5;
     //for(int i = 0; i < 10; ++i)m_grid[i][i] = 1;
     EventManager* evmgr = m_stateManager->GetContext()->m_eventManager;
-    evmgr->AddCallback(StateType::Game,"Key_Escape",&State_Game::MainMenu,this);
-    evmgr->AddCallback(StateType::Game,"Key_Pause",&State_Game::MainMenu,this);
+    //evmgr->AddCallback(StateType::Game,"Key_Escape",&State_Game::MainMenu,this);
+    //evmgr->AddCallback(StateType::Game,"Key_Pause",&State_Game::MainMenu,this);
     evmgr->AddCallback(StateType::Game,"Key_Left",&State_Game::MoveLeft,this);
     evmgr->AddCallback(StateType::Game,"Key_Right",&State_Game::MoveRight,this);
     evmgr->AddCallback(StateType::Game,"Key_Change",&State_Game::ChangeOrientation,this);
     evmgr->AddCallback(StateType::Game,"Key_Increase",&State_Game::IncreaseTick,this);
     evmgr->AddCallback(StateType::Game,"Key_Reset",&State_Game::ResetTick,this);
+    evmgr->AddCallback(StateType::Game,"Key_Pause",&State_Game::Pause,this);
+
     SpawnPiece();
 
 }
@@ -124,9 +126,7 @@ void State_Game::SpawnPiece()
         case 3:
             m_piece = new IShape(m_grid);
             break;
-
-    }
-    
+    } 
 }
 
 void State_Game::MoveDown(){ m_piece->MoveDown();}

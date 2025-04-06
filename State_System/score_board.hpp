@@ -9,6 +9,7 @@ class Score_Board
         void Update();
         void Render(sf::RenderWindow*& l_window);
         void IncreaseScore();
+        
         //void Draw();
 
     private:
